@@ -1,0 +1,43 @@
+#ifndef INC_I2C_H_
+#define INC_I2C_H_
+
+#include "stm32f407xx.h"
+
+/*
+ * @def_gproup I2C_ClockSpeeds
+ */
+#define I2C_SPEED_StandartMode			(100000U)
+#define I2C_SPEED_FastMode				(400000U)
+
+/*
+ * @def_gproup I2C_ACK_State
+ */
+#define I2C_ACK_DISABLE					(0x00000000U)
+#define I2C_ACK_ENABLE					(0x00000400U)
+
+/*
+ * @def_gproup I2C_Stretch_State
+ */
+#define I2C_STRETCH_ENABLE			(0x00000000U)
+#define I2C_STRETCH_DISABLE		(0x00000080U)
+
+
+typedef struct
+{
+	uint32_t ClockSpeed;	/*!< I2C Clock Speed Choice @def_gproup I2C_ClockSpeeds      >*/
+	uint32_t ACK_State;		/*!< I2C ACK State Choice @def_gproup I2C_ACK_State 		 >*/
+	uint32_t ClockStretch;	/*!< I2C Stretch State Choice @def_gproup I2C_Stretch_State  >*/
+}I2C_InitTypeDef_t;
+
+typedef struct
+{
+	I2C_TypeDef_t *Instance;		// Bununla I2C'nin direkt registerlarina dokunur.
+	I2C_InitTypeDef_t Init;			// Bununla da ilgili configuration'i yapiyor.
+
+}I2C_HandleTypeDef_t;
+
+
+void I2C_PeriphCmd(I2C_TypeDef_t *I2Cx, FunctionalState_t stateOfI2C);		// I2C_TypeDef_t parametresi sayesinde sadece o kısma
+																			// register seviyesinde ulasim sagliyacak.
+
+#endif /* INC_I2C_H_ */

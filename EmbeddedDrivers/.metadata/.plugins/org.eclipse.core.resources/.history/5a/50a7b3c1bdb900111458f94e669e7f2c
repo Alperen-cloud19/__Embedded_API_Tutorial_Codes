@@ -1,0 +1,40 @@
+#include "RCC.h"
+
+const uint8_t AHB_Prescaler[] = {0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
+
+uint32_t RCC_GetSystemClock(void)
+{
+	uint32_t SystemCoreClock = 0;
+	uint8_t clkSource = 0;
+
+	clkSource = ((RCC->CFGR >> 2U) & 0X3U);
+
+	switch(clkSource)
+	{
+		case 0 : SystemCoreClock = 16000000; break;
+		case 1 : SystemCoreClock =  8000000; break;
+		//case 2 : SystemCoreClock -> PLL
+
+		default : SystemCoreClock = 16000000;
+	}
+
+	return SystemCoreClock;
+}
+
+uint32_t RCC_GetHClock(void)
+{
+	uint32_t AHB_PeriphClock = 0;
+	uint32_t SystemCoreClock = 0;
+	uint8_t HPRE_Value = 0;
+	uint8_t tempValue = 0;
+
+	SystemCoreClock = RCC_GetSystemClock();				//16 000 000
+
+	HPRE_Value = ((RCC->CFGR >> 4U) & 0xFU);			//11
+	tempValue = AHB_Prescaler[HPRE_Value];
+
+	AHB_PeriphClock = (SystemCoreClock >> tempValue);
+
+	return AHB_PeriphClock;
+}
+
